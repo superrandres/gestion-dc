@@ -1,0 +1,24 @@
+version: '3.3'
+
+services:
+   mysql:
+     image: mysql:5.7.23
+     volumes:
+       - db_data:/var/lib/mysql
+       - ./disable_strict_mode.cnf:/etc/mysql/conf.d/disable_strict_mode.cnf
+     restart: always
+     environment:
+       MYSQL_ROOT_PASSWORD: pruebas123456
+       MYSQL_DATABASE: dcim
+       MYSQL_USER: dcim
+       MYSQL_PASSWORD: dcim
+
+   opendcim:
+     depends_on:
+       - mysql
+     image: my-opendcim:latest
+     ports:
+       - "80:80"
+     restart: always
+volumes:
+    db_data:
