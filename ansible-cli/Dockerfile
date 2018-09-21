@@ -2,7 +2,7 @@ FROM alpine
 RUN	set -x \
 	&& apk update \
 	&& apk upgrade \
-	&& apk add --no-cache ansible \
+	&& apk add --no-cache ansible curl \
 	&& mkdir /etc/ansible \
 	&& mkdir /root/.ssh \
 	&& rm -rf /var/cache/apk/* 

@@ -1,0 +1,69 @@
+# Establecemos el nombre de la tarea
+- name: Actualizar servers con centos e Instala el Web Server
+  # Indicamos que host o hosts se verán afectados
+  hosts: ubuntus
+  # Bajo que usuario aplicaremos las acciones
+  remote_user: root
+  # Si queremos que vaya de uno en uno aplicando las acciones
+  serial: 1
+  # Indica que es superuser
+  become: true
+  # Detiene las tareas si una falla
+  any_errors_fatal: true
+  # Declaramos las tareas
+  tasks:
+    - name: Actualizamos todos los paquetes a su última versión
+      # El comando apt nos sirve para instalar paquetes en ubuntu
+      apt:
+        upgrade: dist
+    - name: Instalamos Nginx
+      apt:
+        # Cuando especificamos el subcomando "name", ansible entiende que debe instalar el paquete especificado
+        name: nginx
+    - name: Creamos el directorio para la página web
+      file:
+        path: /var/www/html
+        state: directory
+        # Con "mode" espeficicamos los permisos necesarios.
+        mode: 0755
+    - name: Copiamos los archivos a nuestro nodo
+      copy:
+        src: /playbooks/static-for-ubuntus/
+        dest: /var/www/html/
+        owner: root
+        group: root
+        mode: 0644
+    - name: Iniciamos el servicio de Nginx
+      service:
+        name: nginx
+        state: started
+- name: Actualizar servers con ubuntu e Instala el Web Server
+  hosts: centos
+  remote_user: root
+  serial: 1
+  become: true
+  any_errors_fatal: true
+  tasks:
+    - name: Actualizamos todos los paquetes a su última versión
+      yum:
+        name: '*'
+        state: latest
+    - name: Instalamon Nginx
+      yum:
+        name: nginx
+    - name: Creamos el directorio para la página web
+      file:
+        path: /var/www/html
+        state: directory
+        mode: 0755
+    - name: Copiamos los archivos a nuestro nodo
+      copy:
+        src: /playbooks/static-for-centos/
+        dest: /var/www/html/
+        owner: root
+        group: root
+        mode: 0644
+    - name: Iniciamos el servicio de Nginx
+      service:
+        name: nginx
+        state: started

@@ -1,6 +1,5 @@
-[centos1]
+[centos]
 172.17.0.2 ansible_user=root
-[centos2]
 172.17.0.3 ansible_user=root
-[ubuntu1]
+[ubuntus]
 172.17.0.4 ansible_user=root
